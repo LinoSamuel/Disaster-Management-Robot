@@ -6,11 +6,11 @@
 #include <fstream>
 #include <iostream>
 #include <unistd.h>
+#include <wiringPi.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <wiringPi.h>
 #include <wiringSerial.h>
 
 
@@ -52,17 +52,21 @@ buff[6]=',';
    pwmSetClock(384);                     // gives 50Hz precisely
    pinMode(PIR, INPUT);
    pullUpDnControl(PIR, PUD_DOWN);  //pull up to 3.3V,make GPIO1 a stable level
-   //pinMode(MODE, OUTPUT);
-   //pullUpDnControl(MODE, PUD_DOWN);  //pull up to 3.3V,make GPIO1 a stable level
-   //digitalWrite(MODE, LOW);
+   pinMode(MODE, OUTPUT);
+   pullUpDnControl(MODE, PUD_DOWN);  //pull up to 3.3V,make GPIO1 a stable level
+   digitalWrite(MODE, LOW);
+   
+   
+  
+   
 
 
 while(1)
 {
-
-
     
-Mat frame;
+    
+if(digitalRead(MODE) == 1)
+{
 if(digitalRead(PIR) == 1)
 {
 
@@ -111,6 +115,9 @@ cap.release();
 cout<<"Opening Camera...2"<<endl;    
 
  sleep(3);
+
+
+
 
 
 
@@ -180,18 +187,67 @@ for (int ii=0;ii<1;ii++)
 		is_GGA_received_completely = 0;
 }
 fstream file;
-file.open("gps1.txt",ios::out);
+file.open("gps.txt",ios::out);
 file << buff;
 file.close();
 system("cat Message.txt gps.txt > Final.txt");
-system("python3 automate.py");
-system("sendemail -f disasterrobot@gmail.com -t lino.msamuel@gmail.com -u Distress Signal Orginated Please Respond Immediatly -o message-file=Final.txt -a test* -s smtp.googlemail.com:587 -xu disasterrobot@gmail.com -xp Group2jlr -o tls=yes");
-sleep(50);
+system("sendemail -f disasterrobot@gmail.com -t lino.msamuel@gmail.com -u Distress Signal Orginated Please Respond Immediatly -o message-file=Final.txt -s smtp.googlemail.com:587 -xu disasterrobot@gmail.com -xp Group2jlr -o tls=yes");
+digitalWrite(MODE, LOW);
 break;
+
 }
 }
 }
 }
+}
+
+}
+else 
+{
+    
+    
+     VideoCapture capture(0); 
+ 
+  // Check if camera opened successfully
+  if(!capture.isOpened())
+  {
+    cout << "Error opening video stream" << endl; 
+    return -1; 
+  } 
+ 
+  // Default resolution of the frame is obtained.The default resolution is system dependent. 
+  int frame_width = capture.get(CV_CAP_PROP_FRAME_WIDTH); 
+  int frame_height = capture.get(CV_CAP_PROP_FRAME_HEIGHT); 
+    while(1)
+    {
+    cout<<"camera mode"<<endl;
+    Mat image; 
+       capture >> image;  
+       
+ 
+      // Detect faces
+      //std::vector<Rect> faces;
+      //face_cascade.detectMultiScale( image, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(30, 30) );
+   
+      // Draw circles on the detected faces
+      //for( int i = 0; i < faces.size(); i++ )
+     // {
+       // Point center( faces[i].x + faces[i].width*0.5, faces[i].y + faces[i].height*0.5 );
+        //ellipse( image, center, Size( faces[i].width*0.5, faces[i].height*0.5), 0, 0, 360, Scalar( 255, 0, 255 ), 4, 8, 0 );
+      //}
+       
+  imshow( "Detected Face", image );
+  waitKey(1);  
+  cvDestroyWindow("window");
+  cout<<"After break1"<<endl;
+  if(digitalRead(MODE) == 1)
+  {
+      cout<<"After break2"<<endl;
+    break; 
+    cout<<"After break3"<<endl;
+  }
+}
+ 
 }
 
 
