@@ -1,6 +1,6 @@
 # Disaster-Management-Robot
 
-![](images/IMG_20180822_191022_Bokeh.jpg)
+![](images/I0.jpeg)
 ![](images/IMG_20180822_194536_Bokeh.jpg)
 
 
