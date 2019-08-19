@@ -191,7 +191,7 @@ file.open("gps.txt",ios::out);
 file << buff;
 file.close();
 system("cat Message.txt gps.txt > Final.txt");
-system("sendemail -f disasterrobot@gmail.com -t lino.msamuel@gmail.com -u Distress Signal Orginated Please Respond Immediatly -o message-file=Final.txt -s smtp.googlemail.com:587 -xu disasterrobot@gmail.com -xp Group2jlr -o tls=yes");
+system("sendemail -f disasterrobot@gmail.com -t emailid -u Distress Signal Orginated Please Respond Immediatly -o message-file=Final.txt -s smtp.googlemail.com:587 -xu disasterrobot@gmail.com -xp password -o tls=yes");
 digitalWrite(MODE, LOW);
 break;
 
